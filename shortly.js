@@ -93,8 +93,25 @@ function(req, res) {
 /************************************************************/
 
 app.post('/signup', function(req, res) {
-  new User({ username: username, password: password})
+    Users.create({ 
+      username: req.body.username,
+      password: req.body.password
+  }).then(function(newUser) {
+      res.redirect(200, '/');
+  });
+});
+
+app.post('/login', function(req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  // var annoyingTable = db.knex('users')
+  // .where('username', '=', req.body.username);
+
+  console.log(db.knex.connection.database())
+
 })
+
+
 
 /************************************************************/
 // Handle the wildcard route last - if all other routes fail

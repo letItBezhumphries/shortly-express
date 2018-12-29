@@ -6,6 +6,7 @@ var knex = require('knex')({
   },
   useNullAsDefault: true
 });
+
 var db = require('bookshelf')(knex);
 
 db.knex.schema.hasTable('urls').then(function(exists) {
@@ -54,5 +55,5 @@ db.knex.schema.hasTable('users').then(function(exists) {
     });
   }
 });
-  
+
 module.exports = db;
