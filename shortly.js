@@ -24,36 +24,26 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 app.use(session({
-  secret: 'coffee_now_andAlways'
-  // resave: false,
-  // saveUninitialized: true
+  secret: 'coffee_now_andAlways',
+  resave: false,
+  saveUninitialized: true
 }));
 
+
 app.get('/', util.checkUser, 
+  function(req, res) {
+    console.log('session', req.session)
+    res.render('index');
+  });
+
+app.get('/create', util.checkUser,
   function(req, res) {
     res.render('index');
   });
 
-app.get('/login', 
-  function(req, res) {
-    res.render('login');
-  });
 
-app.get('/signup',
+app.get('/links', util.checkUser, 
   function(req, res) {
-    res.render('signup');
-  });
-
-app.get('/create', 
-  function(req, res) {
-    res.redirect('/login');
-  // res.render('index');
-  });
-
-
-app.get('/links', 
-  function(req, res) {
-  // res.redirect('/login')
 
     Links.reset().fetch().then(function(links) {
       res.status(200).send(links.models);
@@ -61,7 +51,7 @@ app.get('/links',
   });
 
 
-app.post('/links', 
+app.post('/links', util.checkUser,
   function(req, res) {
     var uri = req.body.url;
 
@@ -97,20 +87,38 @@ app.post('/links',
 // Write your authentication routes here
 /************************************************************/
 
+app.get('/login', 
+  function(req, res) {
+    res.render('login');
+  });
+
+app.get('/signup',
+  function(req, res) {
+    res.render('signup');
+  });
+
+app.get('/logout', 
+  function(req, res) {
+    // if(req.session.id) {
+    //   req.session.id = null
+    // }
+    req.session.destroy();
+    res.redirect('/');
+  })  
+
 app.post('/signup', function(req, res) {
   bcrypt.hash(req.body.password, null, null, function(err, hash) {
     var user = new User({ username: req.body.username, password: hash });
     user.save().then(function(newUser) {
       console.log('Successfully added a new user', newUser);
       req.session.regenerate(function() {
-        res.redirect(200, '/');
+        res.redirect('/');
         req.session.user = user.attributes.id;
+
         console.log('req session user', req.session.user);
       });
-  
     });
   });
-  
 });
 
 
@@ -121,7 +129,6 @@ app.post('/login', function(req, res) {
 
   new User({username: username}).fetch().then(function(user) {
     if (user) {
-      console.log('Found YA!', user);
       
       bcrypt.compare(enteredPassword, user.get('password'), function(err, passwordsDoMatch) {
         if (passwordsDoMatch) {
@@ -129,8 +136,7 @@ app.post('/login', function(req, res) {
             console.log('passwords Do Match!! You May Proceed!');
             res.redirect('/');
             req.session.user = user.attributes.id;
-            console.log('req session user', req.session.user);
-            console.log('&&&&&&& session', req.session);
+
 
           });          
         } else {
