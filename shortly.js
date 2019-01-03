@@ -99,7 +99,7 @@ app.get('/signup',
 app.get('/logout', 
   function(req, res) {
     req.session.destroy(() => {
-      res.redirect('/login')
+      res.redirect('/login');
     });  
   });
 
@@ -109,7 +109,7 @@ app.post('/signup', function(req, res) {
     user.save().then(function(newUser) {
       console.log('Successfully added a new user', newUser);
       req.session.regenerate(function() {
-        req.session.user = newUser
+        req.session.user = newUser;
         res.redirect('/');
         console.log('req session user', req.session.user);
       });
