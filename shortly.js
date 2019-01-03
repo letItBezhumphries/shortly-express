@@ -32,7 +32,7 @@ app.use(session({
 
 app.get('/', util.checkUser, 
   function(req, res) {
-    console.log('session', req.session)
+    console.log('session', req.session);
     res.render('index');
   });
 
@@ -104,7 +104,7 @@ app.get('/logout',
     // }
     req.session.destroy();
     res.redirect('/');
-  })  
+  });  
 
 app.post('/signup', function(req, res) {
   bcrypt.hash(req.body.password, null, null, function(err, hash) {

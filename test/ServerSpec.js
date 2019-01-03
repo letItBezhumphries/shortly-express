@@ -192,7 +192,7 @@ describe('', function() {
         // requestWithSession(options, function(error, res, body) {
         //   var code = res.body.code;
         //   expect(code).to.equal(link.get('code'));
-          done();
+        done();
         // });
       });
 
@@ -205,7 +205,7 @@ describe('', function() {
         // requestWithSession(options, function(error, res, body) {
         //   var currentLocation = res.request.href;
         //   expect(currentLocation).to.equal('http://roflzoo.com/');
-          done();
+        done();
         // });
       });
 
