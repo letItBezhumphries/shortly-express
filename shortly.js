@@ -105,16 +105,16 @@ app.get('/logout',
 
 app.post('/signup', function(req, res) {
   var uppercase = function(password) {
-     password = req.body.password;
+    password = req.body.password;
     for (var i = 0; i < password.length; i++) {
       if (password[i] === password[i].toUpperCase()) {
         return true;
       }
     }
     return false;
-  }
+  };
 
-  if(req.body.password.length >= 4 && uppercase) {
+  if (req.body.password.length >= 4 && uppercase) {
     bcrypt.hash(req.body.password, null, null, function(err, hash) {
       var user = new User({ username: req.body.username, password: hash });
       user.save().then(function(newUser) {
