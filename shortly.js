@@ -41,7 +41,7 @@ app.get('/create', util.checkUser,
   });
 
 
-app.get('/links', util.checkUser, 
+app.get('/links', util.checkUser,
   function(req, res) {
 
     Links.reset().fetch().then(function(links) {
@@ -50,7 +50,7 @@ app.get('/links', util.checkUser,
   });
 
 
-app.post('/links', util.checkUser,
+app.post('/links', 
   function(req, res) {
     var uri = req.body.url;
 
@@ -86,7 +86,7 @@ app.post('/links', util.checkUser,
 // Write your authentication routes here
 /************************************************************/
 
-app.get('/login', 
+app.get('/login',
   function(req, res) {
     res.render('login');
   });
@@ -104,17 +104,31 @@ app.get('/logout',
   });
 
 app.post('/signup', function(req, res) {
-  bcrypt.hash(req.body.password, null, null, function(err, hash) {
-    var user = new User({ username: req.body.username, password: hash });
-    user.save().then(function(newUser) {
-      console.log('Successfully added a new user', newUser);
-      req.session.regenerate(function() {
-        req.session.user = newUser;
-        res.redirect('/');
-        console.log('req session user', req.session.user);
+  var uppercase = function(password) {
+     password = req.body.password;
+    for (var i = 0; i < password.length; i++) {
+      if (password[i] === password[i].toUpperCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  if(req.body.password.length >= 4 && uppercase) {
+    bcrypt.hash(req.body.password, null, null, function(err, hash) {
+      var user = new User({ username: req.body.username, password: hash });
+      user.save().then(function(newUser) {
+        console.log('Successfully added a new user', newUser);
+        req.session.regenerate(function() {
+          req.session.user = newUser;
+          res.redirect('/');
+          console.log('req session user', req.session.user);
+        });
       });
     });
-  });
+  } else {
+    res.redirect('/signup');
+  }
 });
 
 
@@ -135,7 +149,7 @@ app.post('/login', function(req, res) {
           });          
         } else {
           console.log('Password Do NOT match, try again!');
-          res.redirect('/login');
+          res.redirect('/');
         }
       });
     } else {
