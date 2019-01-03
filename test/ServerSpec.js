@@ -189,11 +189,11 @@ describe('', function() {
           }
         };
 
-        // requestWithSession(options, function(error, res, body) {
-        //   var code = res.body.code;
-        //   expect(code).to.equal(link.get('code'));
+        requestWithSession(options, function(error, res, body) {
+          var code = res.body.code;
+          expect(code).to.equal(link.get('code'));
         done();
-        // });
+        });
       });
 
       it('Shortcode redirects to correct url', function(done) {
@@ -202,11 +202,11 @@ describe('', function() {
           'uri': 'http://127.0.0.1:4568/' + link.get('code')
         };
 
-        // requestWithSession(options, function(error, res, body) {
-        //   var currentLocation = res.request.href;
-        //   expect(currentLocation).to.equal('http://roflzoo.com/');
+        requestWithSession(options, function(error, res, body) {
+          var currentLocation = res.request.href;
+          expect(currentLocation).to.equal('http://roflzoo.com/');
         done();
-        // });
+        });
       });
 
       it('Returns all of the links to display on the links page', function(done) {

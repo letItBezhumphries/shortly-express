@@ -32,7 +32,6 @@ app.use(session({
 
 app.get('/', util.checkUser, 
   function(req, res) {
-    console.log('session', req.session);
     res.render('index');
   });
 
@@ -99,12 +98,10 @@ app.get('/signup',
 
 app.get('/logout', 
   function(req, res) {
-    // if(req.session.id) {
-    //   req.session.id = null
-    // }
-    req.session.destroy();
-    res.redirect('/');
-  });  
+    req.session.destroy(() => {
+      res.redirect('/login')
+    });  
+  });
 
 app.post('/signup', function(req, res) {
   bcrypt.hash(req.body.password, null, null, function(err, hash) {
@@ -112,9 +109,8 @@ app.post('/signup', function(req, res) {
     user.save().then(function(newUser) {
       console.log('Successfully added a new user', newUser);
       req.session.regenerate(function() {
+        req.session.user = newUser
         res.redirect('/');
-        req.session.user = user.attributes.id;
-
         console.log('req session user', req.session.user);
       });
     });
@@ -134,10 +130,8 @@ app.post('/login', function(req, res) {
         if (passwordsDoMatch) {
           req.session.regenerate(function() {
             console.log('passwords Do Match!! You May Proceed!');
+            req.session.user = user;
             res.redirect('/');
-            req.session.user = user.attributes.id;
-
-
           });          
         } else {
           console.log('Password Do NOT match, try again!');
@@ -146,14 +140,12 @@ app.post('/login', function(req, res) {
       });
     } else {
       console.log('Username not found, sign up please.');
-      res.redirect('/signup');
+      res.redirect('/login');
     }
   });
-
   // db.knex.select('username', 'password').from('users').then(function(user) {
   //   c.log('user********', user)
   // });
-
 });
 
 
