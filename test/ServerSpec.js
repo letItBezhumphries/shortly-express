@@ -313,13 +313,13 @@ describe('', function() {
       });      
     });
 
-    it('Signup does not log in a new user when password provided is less than 4 characters long', function(done) {
+    it('Signup does not log in a new user when password provided does not include a capital letter', function(done) {
       var options = {
         'method': 'POST',
         'uri': 'http://127.0.0.1:4568/signup',
         'json': {
           'username': 'Phillip',
-          'password': 'Ph'
+          'password': 'phillip'
         }
       };
       request(options, function(error, res, body) {
@@ -328,13 +328,13 @@ describe('', function() {
       });      
     });
 
-    it('Signup does not log in a new user when password provided is less than 4 characters long', function(done) {
+    it('Signup does not log in a new user when password provided does include lower case letters', function(done) {
       var options = {
         'method': 'POST',
         'uri': 'http://127.0.0.1:4568/signup',
         'json': {
           'username': 'Phillip',
-          'password': 'Ph'
+          'password': 'PHILLIP'
         }
       };
       request(options, function(error, res, body) {

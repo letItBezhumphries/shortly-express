@@ -103,19 +103,25 @@ app.get('/logout',
   });
 
 
-app.post('/signup', function(req, res) {
 
-  bcrypt.hash(req.body.password, null, null, function(err, hash) {
-    var user = new User({ username: req.body.username, password: hash });
-    user.save().then(function(newUser) {
-      console.log('Successfully added a new user', newUser);
-      req.session.regenerate(function() {
-        req.session.user = newUser;
-        res.redirect('/');
-        console.log('req session user', req.session.user);
+app.post('/signup', function(req, res) {
+  var meetsRequirements = util.checkPasswordRequirements(req.body.password);
+
+  if (req.body.password.length < 4 || !meetsRequirements) {
+    res.redirect('/signup');
+  } else {
+    bcrypt.hash(req.body.password, null, null, function(err, hash) {
+      var user = new User({ username: req.body.username, password: hash });
+      user.save().then(function(newUser) {
+        console.log('Successfully added a new user', newUser);
+        req.session.regenerate(function() {
+          req.session.user = newUser;
+          res.redirect('/');
+          console.log('req session user', req.session.user);
+        });
       });
     });
-  });
+  }
 });
 
 app.post('/login', function(req, res) {
