@@ -43,14 +43,13 @@ app.get('/create', util.checkUser,
 
 app.get('/links', util.checkUser,
   function(req, res) {
-
     Links.reset().fetch().then(function(links) {
       res.status(200).send(links.models);
     });
   });
 
 
-app.post('/links', 
+app.post('/links',
   function(req, res) {
     var uri = req.body.url;
 
@@ -86,35 +85,26 @@ app.post('/links',
 // Write your authentication routes here
 /************************************************************/
 
-app.get('/login',
+app.get('/login', 
   function(req, res) {
     res.render('login');
   });
 
-app.get('/signup',
+app.get('/signup', 
   function(req, res) {
     res.render('signup');
   });
 
-app.get('/logout', 
+  app.get('/logout', 
   function(req, res) {
-    req.session.destroy(() => {
+    req.session.destroy(function() {
       res.redirect('/login');
-    });  
+    });
   });
 
-app.post('/signup', function(req, res) {
-  var uppercase = function(password) {
-    password = req.body.password;
-    for (var i = 0; i < password.length; i++) {
-      if (password[i] === password[i].toUpperCase()) {
-        return true;
-      }
-    }
-    return false;
-  };
 
-  if (req.body.password.length >= 4 && uppercase) {
+app.post('/signup', function(req, res) {
+
     bcrypt.hash(req.body.password, null, null, function(err, hash) {
       var user = new User({ username: req.body.username, password: hash });
       user.save().then(function(newUser) {
@@ -126,12 +116,7 @@ app.post('/signup', function(req, res) {
         });
       });
     });
-  } else {
-    res.redirect('/signup');
-  }
 });
-
-
 
 app.post('/login', function(req, res) {
   var username = req.body.username;

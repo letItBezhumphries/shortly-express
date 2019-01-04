@@ -26,12 +26,6 @@ window.Shortly = Backbone.View.extend({
     this.router.navigate('/', { trigger: true });
   },
 
-  // renderLogoutView: function(e) {
-  //   console.log('ive been clicked!!');
-  //   e && e.preventDefault();
-  //   this.router.navigate('/logout', { trigger: true });
-  // },
-
   renderCreateView: function(e) {
     e && e.preventDefault();
     this.router.navigate('/create', { trigger: true });

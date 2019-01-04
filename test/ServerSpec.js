@@ -192,7 +192,7 @@ describe('', function() {
         requestWithSession(options, function(error, res, body) {
           var code = res.body.code;
           expect(code).to.equal(link.get('code'));
-          done();
+        done();
         });
       });
 
@@ -205,7 +205,7 @@ describe('', function() {
         requestWithSession(options, function(error, res, body) {
           var currentLocation = res.request.href;
           expect(currentLocation).to.equal('http://roflzoo.com/');
-          done();
+        done();
         });
       });
 
@@ -298,70 +298,50 @@ describe('', function() {
       });
     });
 
-    it('Signup logs in a new user', function(done) {
+    it('Signup does not log in a new user when password provided is less than 4 characters long', function(done) {
       var options = {
         'method': 'POST',
         'uri': 'http://127.0.0.1:4568/signup',
         'json': {
           'username': 'Phillip',
-          'password': 'Phillip'
-        }
-      };
-
-      request(options, function(error, res, body) {
-        expect(res.headers.location).to.equal('/');
-        done();
-      });
-    });
-
-    it('Does not allow account creation if the password is less than 4 characters', function(done) {
-      var options = {
-        'method': 'POST',
-        'uri': 'http://127.0.0.1:4568/signup',
-        'json': {
-          'username': 'Phillip',
-          'password': 'T'
+          'password': 'Ph'
         }
       };
       request(options, function(error, res, body) {
-        console.log(res.headers);
         expect(res.headers.location).to.equal('/signup');
         done();
-      });
+      })      
     });
 
-    it('Does not allow account creation if the password does not contain a capital letter', function(done) {
+    it('Signup does not log in a new user when password provided is less than 4 characters long', function(done) {
       var options = {
         'method': 'POST',
         'uri': 'http://127.0.0.1:4568/signup',
         'json': {
           'username': 'Phillip',
-          'password': 't'
+          'password': 'Ph'
         }
       };
       request(options, function(error, res, body) {
-        console.log(res.headers);
         expect(res.headers.location).to.equal('/signup');
         done();
-      });
+      })      
     });
 
-    it('Does not allow account creation if the password does not contain a lowercase letter', function(done) {
+    it('Signup does not log in a new user when password provided is less than 4 characters long', function(done) {
       var options = {
         'method': 'POST',
         'uri': 'http://127.0.0.1:4568/signup',
         'json': {
           'username': 'Phillip',
-          'password': 'T'
+          'password': 'Ph'
         }
       };
       request(options, function(error, res, body) {
-        console.log(res.headers);
         expect(res.headers.location).to.equal('/signup');
         done();
-      });
+      })      
     });
-
   }); // 'Account Creation'
 
   describe('Account Login:', function() {
