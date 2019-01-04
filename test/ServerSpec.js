@@ -192,7 +192,7 @@ describe('', function() {
         requestWithSession(options, function(error, res, body) {
           var code = res.body.code;
           expect(code).to.equal(link.get('code'));
-        done();
+          done();
         });
       });
 
@@ -205,7 +205,7 @@ describe('', function() {
         requestWithSession(options, function(error, res, body) {
           var currentLocation = res.request.href;
           expect(currentLocation).to.equal('http://roflzoo.com/');
-        done();
+          done();
         });
       });
 
@@ -310,7 +310,7 @@ describe('', function() {
       request(options, function(error, res, body) {
         expect(res.headers.location).to.equal('/signup');
         done();
-      })      
+      });      
     });
 
     it('Signup does not log in a new user when password provided is less than 4 characters long', function(done) {
@@ -325,7 +325,7 @@ describe('', function() {
       request(options, function(error, res, body) {
         expect(res.headers.location).to.equal('/signup');
         done();
-      })      
+      });      
     });
 
     it('Signup does not log in a new user when password provided is less than 4 characters long', function(done) {
@@ -340,7 +340,7 @@ describe('', function() {
       request(options, function(error, res, body) {
         expect(res.headers.location).to.equal('/signup');
         done();
-      })      
+      });      
     });
   }); // 'Account Creation'
 
