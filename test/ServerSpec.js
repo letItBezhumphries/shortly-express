@@ -53,10 +53,10 @@ describe('', function() {
       .del()
       .catch(function(error) {
         // uncomment when writing authentication tests
-        // throw {
-        //   type: 'DatabaseError',
-        //   message: 'Failed to create test setup data'
-        // };
+        throw {
+          type: 'DatabaseError',
+          message: 'Failed to create test setup data'
+        };
       });
 
     // delete user Phillip from db so it can be created later for the test
@@ -65,10 +65,10 @@ describe('', function() {
       .del()
       .catch(function(error) {
         // uncomment when writing authentication tests
-        // throw {
-        //   type: 'DatabaseError',
-        //   message: 'Failed to create test setup data'
-        // };
+        throw {
+          type: 'DatabaseError',
+          message: 'Failed to create test setup data'
+        };
       });
   });
 
@@ -76,7 +76,7 @@ describe('', function() {
 
     var requestWithSession = request.defaults({jar: true});
 
-    xbeforeEach(function(done) {
+    beforeEach(function(done) {
       // create a user that we can then log-in with
       new User({
         'username': 'Phillip',
@@ -209,24 +209,24 @@ describe('', function() {
         });
       });
 
-      it('Returns all of the links to display on the links page', function(done) {
-        var options = {
-          'method': 'GET',
-          'uri': 'http://127.0.0.1:4568/links'
-        };
+      // it('Returns all of the links to display on the links page', function(done) {
+      //   var options = {
+      //     'method': 'GET',
+      //     'uri': 'http://127.0.0.1:4568/links'
+      //   };
 
-        requestWithSession(options, function(error, res, body) {
-          expect(body).to.include('"title":"Funny pictures of animals, funny dog pictures"');
-          expect(body).to.include('"code":"' + link.get('code') + '"');
-          done();
-        });
-      });
+      //   requestWithSession(options, function(error, res, body) {
+      //     expect(body).to.include('"title":"Funny pictures of animals, funny dog pictures"');
+      //     expect(body).to.include('"code":"' + link.get('code') + '"');
+      //     done();
+      //   });
+      // });
 
     }); // 'With previously saved urls'
 
   }); // 'Link creation'
 
-  xdescribe('Privileged Access:', function() {
+  describe('Privileged Access:', function() {
 
     it('Redirects to login page if a user tries to access the main page and is not signed in', function(done) {
       request('http://127.0.0.1:4568/', function(error, res, body) {
@@ -251,7 +251,7 @@ describe('', function() {
 
   }); // 'Priviledged Access'
 
-  xdescribe('Account Creation:', function() {
+  describe('Account Creation:', function() {
 
     it('Signup creates a user record', function(done) {
       var options = {
@@ -262,8 +262,9 @@ describe('', function() {
           'password': 'Svnh'
         }
       };
-
+      
       request(options, function(error, res, body) {
+
         db.knex('users')
           .where('username', '=', 'Svnh')
           .then(function(res) {
@@ -297,9 +298,53 @@ describe('', function() {
       });
     });
 
+    it('Signup does not log in a new user when password provided is less than 4 characters long', function(done) {
+      var options = {
+        'method': 'POST',
+        'uri': 'http://127.0.0.1:4568/signup',
+        'json': {
+          'username': 'Phillip',
+          'password': 'Ph'
+        }
+      };
+      request(options, function(error, res, body) {
+        expect(res.headers.location).to.equal('/signup');
+        done();
+      });      
+    });
+
+    it('Signup does not log in a new user when password provided does not include a capital letter', function(done) {
+      var options = {
+        'method': 'POST',
+        'uri': 'http://127.0.0.1:4568/signup',
+        'json': {
+          'username': 'Phillip',
+          'password': 'phillip'
+        }
+      };
+      request(options, function(error, res, body) {
+        expect(res.headers.location).to.equal('/signup');
+        done();
+      });      
+    });
+
+    it('Signup does not log in a new user when password provided does include lower case letters', function(done) {
+      var options = {
+        'method': 'POST',
+        'uri': 'http://127.0.0.1:4568/signup',
+        'json': {
+          'username': 'Phillip',
+          'password': 'PHILLIP'
+        }
+      };
+      request(options, function(error, res, body) {
+        expect(res.headers.location).to.equal('/signup');
+        done();
+      });      
+    });
   }); // 'Account Creation'
 
-  xdescribe('Account Login:', function() {
+  describe('Account Login:', function() {
 
     var requestWithSession = request.defaults({jar: true});
 
